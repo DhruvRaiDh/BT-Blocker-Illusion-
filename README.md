@@ -23,8 +23,8 @@ A sophisticated Bluetooth blocking application for Windows that prevents device 
 
 ## Installation
 
-### Option 1: Use Pre-built EXE
-Download `BT_Blocker.exe` from `/dist` folder and run as Administrator.
+### Option 1: Pre-built EXE
+No release artifact is published yet. Build locally (see Option 2) or copy the locally built `dist/BT_Blocker.exe` if someone shares it with you. Running from the repo alone will not fetch an EXE.
 
 ### Option 2: Install from Source
 ```powershell
@@ -45,6 +45,12 @@ python bt_blocker.py
 pip install pyinstaller
 pyinstaller --onefile --windowed --uac-admin --name "BT_Blocker" --manifest admin.manifest --hidden-import=pystray._win32 --hidden-import=PIL --hidden-import=PIL.Image --hidden-import=PIL.ImageDraw --collect-all pystray bt_blocker.py
 ```
+
+## Current status / limitations
+
+- The app currently blocks **all** devices when blocking is ON. Whitelist checks are applied only in the BT API and PnP layers, but the global RFCOMM socket trap and registry DisableSCO/ACL layers still disrupt whitelisted devices. Result: allow-listing is not reliable yet.
+- The PnP “soft disconnect” step momentarily disables and re-enables the Bluetooth device node. It is not a permanent driver disable, but you will see a brief disable/enable cycle when blocking is active.
+- No published binary download; you must build locally via PyInstaller.
 
 ## Usage
 
@@ -82,10 +88,10 @@ When you enable blocking:
 
 ## Notes
 
-- **Drivers Stay Intact**: No driver disabling or modification
-- **Bluetooth Stays ON**: You remain discoverable
-- **Non-Destructive**: Disabling blocker fully restores connectivity
-- **Whitelist Allows**: Specific devices can always connect
+- **Drivers stay loaded**: The PnP soft cycle briefly disables/enables the BT device node; it does not uninstall drivers.
+- **Bluetooth stays ON**: You remain discoverable.
+- **Non-destructive**: Turning blocking OFF restores normal connectivity.
+- **Whitelist caveat**: Because of global socket/registry layers, whitelisted devices may still be blocked in the current build.
 
 ## License
 
