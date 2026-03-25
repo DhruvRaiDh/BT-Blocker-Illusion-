@@ -2,8 +2,9 @@
 dist/
 build/
 *.exe
-*.spec
 *.egg-info/
+*.spec
+!BT_Blocker.spec
 
 # Python
 __pycache__/
